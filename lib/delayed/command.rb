@@ -95,12 +95,12 @@ module Delayed
         if worker_count > 1
           raise ArgumentError, 'Cannot specify both --number-of-workers and --identifier'
         else
-          run_process("delayed_job.#{@options[:identifier]}", @options)
+          run_process("delayed_job_num#{@options[:identifier]}", @options)
         end
         # rubocop:enable GuardClause
       else
         worker_count.times do |worker_index|
-          process_name = worker_count == 1 ? 'delayed_job' : "delayed_job.#{worker_index}"
+          process_name = worker_count == 1 ? 'delayed_job' : "delayed_job_num#{worker_index}"
           run_process(process_name, @options)
         end
       end
@@ -111,7 +111,7 @@ module Delayed
       @worker_pools.each do |queues, worker_count|
         options = @options.merge(:queues => queues)
         worker_count.times do
-          process_name = "delayed_job.#{worker_index}"
+          process_name = "delayed_job_num#{worker_index}"
           run_process(process_name, options)
           worker_index += 1
         end
